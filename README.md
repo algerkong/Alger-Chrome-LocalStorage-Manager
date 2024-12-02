@@ -1,30 +1,44 @@
-# React + TypeScript + Vite
+# AlgerChrome-LocalstorageManager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A powerful Chrome extension for managing and manipulating website LocalStorage data.
 
-Currently, two official plugins are available:
+[中文文档](README_ZH.md)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- 🔍 Real-time viewing and editing of LocalStorage data
+- 📝 JSON formatting and validation support
+- 🕒 Smart timestamp detection and formatting
+- 📋 One-click data migration code copying
+- 🌓 Light/Dark theme support
+- 🌍 Internationalization (English/Chinese)
+- 💻 Professional code editor experience
+- 🎨 Modern UI design
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+- React + TypeScript
+- Vite
+- Ant Design
+- TailwindCSS
+- CodeMirror
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Core Features
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Data Management
+- View all LocalStorage data of the current website
+- Real-time editing and saving
+- One-click data deletion
+- Batch data export and migration support
+
+### Smart Detection
+- Automatic JSON data formatting
+- Automatic timestamp conversion
+- Special handling for numeric types
+
+### User Experience
+- Responsive design
+- System theme auto-switching
+- System language auto-switching
+- Professional code editor
+- Modern UI design
