@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Layout, Button, Drawer, Typography, message, Space, Table, Tooltip } from 'antd';
-import { EditOutlined, CopyOutlined, DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Layout, Button, Drawer, Typography, message, Space, Table, Tooltip, Switch } from 'antd';
+import { EditOutlined, CopyOutlined, DeleteOutlined, ReloadOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
@@ -20,6 +20,34 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [isModalJson, setIsModalJson] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    chrome.storage.local.get(['isDarkMode'], (result) => {
+      setIsDarkMode(result.isDarkMode || false);
+    });
+
+    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+      if (changes.isDarkMode) {
+        setIsDarkMode(changes.isDarkMode.newValue);
+      }
+    };
+
+    chrome.storage.local.onChanged.addListener(handleStorageChange);
+
+    return () => {
+      chrome.storage.local.onChanged.removeListener(handleStorageChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    chrome.storage.local.set({ isDarkMode });
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   const fetchLocalStorage = async () => {
     try {
@@ -186,7 +214,11 @@ function App() {
       render: (text: string, record) => {
         return (
           <div 
-            className="break-all whitespace-pre-wrap py-2 cursor-pointer hover:bg-gray-50 line-clamp-1"
+            className={`break-all whitespace-pre-wrap py-2 cursor-pointer line-clamp-1 transition-colors
+              ${isDarkMode 
+                ? 'hover:bg-gray-700/50 text-gray-200' 
+                : 'hover:bg-gray-50 text-gray-900'
+              }`}
             onClick={() => handleValueClick(record)}
           >
             {text}
@@ -206,14 +238,13 @@ function App() {
           <Button
             type="text"
             icon={<EditOutlined />}
-            onClick={() => {
-              // 点击编辑按钮时也使用相同的逻辑
-              handleValueClick(record);
-            }}
+            className={isDarkMode ? 'text-gray-300 hover:text-blue-300' : ''}
+            onClick={() => handleValueClick(record)}
           />
           <Button
             type="text"
             icon={<CopyOutlined />}
+            className={isDarkMode ? 'text-gray-300 hover:text-blue-300' : ''}
             onClick={() => {
               navigator.clipboard.writeText(record.value);
               messageApi.success('已复制到剪贴板');
@@ -223,6 +254,7 @@ function App() {
             type="text"
             danger
             icon={<DeleteOutlined />}
+            className={isDarkMode ? '!text-red-400 hover:!text-red-300' : ''}
             onClick={() => handleDelete(record.key)}
           />
         </Space>
@@ -243,14 +275,17 @@ function App() {
   };
 
   return (
-    <Layout className="min-w-[784px]">
+    <Layout className={`min-w-[784px] transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {contextHolder}
       <Header 
-        className="flex items-center justify-between bg-white px-4 py-2 shadow fixed top-0 left-0 right-0 z-10"
-        style={{ height: '56px' }}
+        className={`flex items-center justify-between px-4 py-2 shadow-md fixed top-0 left-0 right-0 z-10 transition-colors duration-300
+          ${isDarkMode ? 'bg-gray-800 shadow-gray-700/30' : 'bg-white shadow-gray-200/50'}`}
+        style={{ height: '56px', borderRadius: '0 0 16px 16px' }}
       >
         <div className="flex items-center gap-4">
-          <Title level={4} style={{ margin: 0 }}>LocalStorage 管理器</Title>
+          <Title level={4} className={`m-0 ${isDarkMode ? 'text-gray-100 !important' : ''}`}>
+            LocalStorage 管理器
+          </Title>
           <Tooltip 
             title="复制一段代码，可以在控制台执行以批量设置当前所有 localStorage 数据"
             placement="bottom"
@@ -258,27 +293,42 @@ function App() {
             <Button
               onClick={copySetupCode}
               icon={<CopyOutlined />}
+              className={`hover:border-blue-400 hover:text-blue-400 transition-colors ${
+                isDarkMode ? 'border-gray-600 text-gray-300 hover:text-blue-300 hover:border-blue-300' : ''
+              }`}
             >
               复制设置代码
             </Button>
           </Tooltip>
         </div>
-        <Tooltip title="刷新 localStorage 数据">
-          <Button
-            type="primary"
-            icon={<ReloadOutlined />}
-            onClick={fetchLocalStorage}
-            loading={loading}
-          >
-            刷新
-          </Button>
-        </Tooltip>
+        <Space>
+          <Switch
+            checkedChildren={<MoonOutlined />}
+            unCheckedChildren={<SunOutlined />}
+            checked={isDarkMode}
+            onChange={setIsDarkMode}
+            className={isDarkMode ? '!bg-blue-500' : ''}
+          />
+          <Tooltip title="刷新 localStorage 数据">
+            <Button
+              type="primary"
+              icon={<ReloadOutlined />}
+              onClick={fetchLocalStorage}
+              loading={loading}
+              className={isDarkMode ? 'bg-blue-500 hover:bg-blue-400' : ''}
+            >
+              刷新
+            </Button>
+          </Tooltip>
+        </Space>
       </Header>
       
       <Content 
         className="p-4 mt-[56px]"
       >
-        <div style={{ height: '100%' }}>
+        <div className={`rounded-lg shadow-lg transition-colors duration-300 ${
+          isDarkMode ? 'bg-gray-800 shadow-gray-700/30' : 'bg-white shadow-gray-200/50'
+        }`}>
           <Table
             columns={columns}
             dataSource={items}
@@ -286,10 +336,7 @@ function App() {
             size="middle"
             pagination={false}
             loading={loading}
-            style={{ 
-              height: '100%'
-            }}
-            className="no-scrollbar content-table"
+            className={`no-scrollbar content-table ${isDarkMode ? 'dark' : ''}`}
           />
         </div>
       </Content>
@@ -299,17 +346,17 @@ function App() {
           <div className="flex items-center gap-2">
             <span>编辑 {selectedItem?.key}</span>
             {isModalJson && (
-              <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">
+              <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
                 JSON
               </span>
             )}
             {selectedItem?.extraInfo && (
-              <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded">
+              <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
                 时间戳: {selectedItem.extraInfo}
               </span>
             )}
             {!isModalJson && !selectedItem?.extraInfo && isNumber(selectedItem?.value || '') && (
-              <span className="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded">
+              <span className="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full">
                 数字
               </span>
             )}
@@ -319,6 +366,7 @@ function App() {
         onClose={() => setSelectedItem(null)}
         width="80%"
         placement="right"
+        className={isDarkMode ? 'dark' : ''}
         extra={
           <Space>
             {selectedItem?.extraInfo && (

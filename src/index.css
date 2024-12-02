@@ -4,17 +4,66 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 隐藏横向滚动条 */
+/* 暗色主题样式 */
+.dark .ant-table {
+  background-color: transparent;
+  color: #e5e7eb !important;
+}
+
+.dark .ant-table-thead > tr > th {
+  background-color: #374151 !important;
+  color: #e5e7eb !important;
+  border-bottom: 1px solid #4b5563 !important;
+}
+
+.dark .ant-table-tbody > tr > td {
+  background-color: transparent !important;
+  color: #e5e7eb !important;
+  border-bottom: 1px solid #4b5563 !important;
+}
+
+.dark .ant-table-tbody > tr:hover > td {
+  background-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+.dark .ant-drawer-content {
+  background-color: #1f2937;
+  color: #e5e7eb;
+}
+
+.dark .ant-drawer-header {
+  background-color: #1f2937;
+  border-bottom: 1px solid #4b5563;
+}
+
+.dark .ant-drawer-title {
+  color: #e5e7eb;
+}
+
+.dark .ant-drawer-close {
+  color: #e5e7eb;
+}
+
+.dark .cm-editor {
+  background-color: #374151 !important;
+  color: #e5e7eb !important;
+}
+
+.dark .cm-gutters {
+  background-color: #1f2937 !important;
+  border-right: 1px solid #4b5563 !important;
+}
+
+/* 滚动条样式 */
 .no-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .no-scrollbar::-webkit-scrollbar-horizontal {
-  display: none; /* Chrome, Safari and Opera */
+  display: none;
 }
 
-/* 保持垂直滚动条 */
 .no-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
@@ -28,7 +77,7 @@
   background-color: #bfbfbf;
 }
 
-/* 调整表格样式 */
+/* 表格样式 */
 .content-table .ant-table-cell {
   vertical-align: top;
   padding: 8px 16px !important;
@@ -45,4 +94,62 @@
 
 .content-table .ant-table-tbody > tr:hover > td {
   background: #fafafa;
+}
+
+/* 动画效果 */
+.ant-table-tbody > tr > td,
+.ant-drawer,
+.ant-btn,
+.ant-switch {
+  transition: all 0.3s ease;
+}
+
+/* 按钮悬浮效果 */
+.ant-btn:not(.ant-btn-primary):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 暗色主题下的标题颜色 */
+.dark .ant-typography {
+  color: #e5e7eb !important;
+}
+
+/* 暗色主题下的按钮样式 */
+.dark .ant-btn {
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.dark .ant-btn:hover {
+  border-color: #60a5fa;
+  color: #60a5fa;
+}
+
+.dark .ant-btn-primary {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+
+.dark .ant-btn-primary:hover {
+  background-color: #60a5fa;
+  border-color: #60a5fa;
+}
+
+/* 暗色主题下的开关样式 */
+.dark .ant-switch.ant-switch-checked {
+  background-color: #3b82f6 !important;
+}
+
+/* 暗色主题下的 Drawer 样式优化 */
+.dark .ant-drawer-content,
+.dark .ant-drawer-header {
+  background-color: #1f2937;
+  border-color: #4b5563;
+}
+
+.dark .ant-drawer-title,
+.dark .ant-drawer-close {
+  color: #e5e7eb;
 }
