@@ -1,0 +1,48 @@
+@import 'antd/dist/reset.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 隐藏横向滚动条 */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar-horizontal {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* 保持垂直滚动条 */
+.no-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.no-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #d9d9d9;
+  border-radius: 3px;
+}
+
+.no-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #bfbfbf;
+}
+
+/* 调整表格样式 */
+.content-table .ant-table-cell {
+  vertical-align: top;
+  padding: 8px 16px !important;
+}
+
+.content-table .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.content-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.content-table .ant-table-tbody > tr:hover > td {
+  background: #fafafa;
+}
