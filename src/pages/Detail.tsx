@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Layout, Button, message, Switch } from 'antd';
+import { Layout, Button, message, Space } from 'antd';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
-import { SunOutlined, MoonOutlined } from '@ant-design/icons';
+import { useLocale } from '../contexts/LocaleContext';
+import { EditorView } from '@codemirror/view';
 
 const { Header, Content } = Layout;
 
@@ -13,8 +14,16 @@ function Detail() {
   const [messageApi, contextHolder] = message.useMessage();
   const [originalTabId, setOriginalTabId] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { t } = useLocale();
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabId = params.get('tabId');
+    
+    if (tabId) {
+      setOriginalTabId(parseInt(tabId));
+    }
+
     chrome.storage.local.get(['isDarkMode'], (result) => {
       setIsDarkMode(result.isDarkMode || false);
     });
@@ -26,28 +35,6 @@ function Detail() {
     };
 
     chrome.storage.local.onChanged.addListener(handleStorageChange);
-
-    return () => {
-      chrome.storage.local.onChanged.removeListener(handleStorageChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    chrome.storage.local.set({ isDarkMode });
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
-
-  useEffect(() => {
-    // 获取原始标签页ID
-    const params = new URLSearchParams(window.location.search);
-    const tabId = params.get('tabId');
-    if (tabId) {
-      setOriginalTabId(parseInt(tabId));
-    }
 
     const keyParam = params.get('key');
     const valueParam = params.get('value');
@@ -63,7 +50,19 @@ function Detail() {
         setIsJson(false);
       }
     }
+
+    return () => {
+      chrome.storage.local.onChanged.removeListener(handleStorageChange);
+    };
   }, []);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   const handleSave = async () => {
     try {
@@ -72,7 +71,7 @@ function Detail() {
       }
       
       if (!originalTabId) {
-        messageApi.error('无法获取目标标签页');
+        messageApi.error(t('getTabError'));
         return;
       }
 
@@ -84,14 +83,14 @@ function Detail() {
         args: [key, value]
       });
 
-      messageApi.success('保存成功');
+      messageApi.success(t('saveSuccess'));
     } catch (error) {
       if (isJson) {
-        messageApi.error('JSON 格式错误，请检查格式');
+        messageApi.error(t('jsonFormatError'));
       } else {
-        messageApi.error('保存失败');
+        messageApi.error(t('saveFailed'));
       }
-      console.error('保存失败:', error);
+      console.error(t('saveFailed'), error);
     }
   };
 
@@ -103,31 +102,24 @@ function Detail() {
           ${isDarkMode ? 'bg-gray-800 shadow-gray-700/30' : 'bg-white shadow-gray-200/50'}`}
       >
         <div className={`text-lg font-semibold flex items-center gap-2 ${isDarkMode ? 'text-gray-100' : ''}`}>
-          <span>编辑 LocalStorage: {key}</span>
+          <span>{t('editLS')}: {key}</span>
           {isJson && (
             <span className={`text-xs px-2 py-1 rounded-full ${
               isDarkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-100 text-blue-600'
             }`}>
-              JSON
+              {t('json')}
             </span>
           )}
         </div>
-        <div className="flex items-center gap-2">
-          <Switch
-            checkedChildren={<MoonOutlined />}
-            unCheckedChildren={<SunOutlined />}
-            checked={isDarkMode}
-            onChange={setIsDarkMode}
-            className={isDarkMode ? '!bg-blue-500' : ''}
-          />
+        <Space>
           <Button 
             type="primary" 
             onClick={handleSave}
             className={isDarkMode ? 'bg-blue-500 hover:bg-blue-400' : ''}
           >
-            保存
+            {t('save')}
           </Button>
-        </div>
+        </Space>
       </Header>
       <Content className="p-4">
         <div className={`rounded-lg shadow-lg h-full transition-colors duration-300 ${
@@ -137,10 +129,18 @@ function Detail() {
             value={value}
             height="calc(100vh - 120px)"
             theme={isDarkMode ? 'dark' : 'light'}
-            extensions={isJson ? [json()] : []}
+            extensions={[
+              ...(isJson ? [json()] : []),
+              EditorView.lineWrapping,
+            ]}
             onChange={(value) => setValue(value)}
             style={{
               fontSize: 14,
+            }}
+            basicSetup={{
+              lineNumbers: true,
+              foldGutter: true,
+              highlightActiveLine: true
             }}
           />
         </div>

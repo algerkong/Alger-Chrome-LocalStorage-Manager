@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Layout, Button, Drawer, Typography, message, Space, Table, Tooltip, Switch } from 'antd';
-import { EditOutlined, CopyOutlined, DeleteOutlined, ReloadOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons';
+import { Layout, Button, Drawer, Typography, message, Space, Table, Tooltip, Dropdown } from 'antd';
+import { EditOutlined, CopyOutlined, DeleteOutlined, ReloadOutlined, SunOutlined, MoonOutlined, MoreOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
+import { useLocale } from './contexts/LocaleContext';
+import { EditorView } from '@codemirror/view';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -21,12 +23,34 @@ function App() {
   const [messageApi, contextHolder] = message.useMessage();
   const [isModalJson, setIsModalJson] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { t, setLocale } = useLocale();
 
   useEffect(() => {
-    chrome.storage.local.get(['isDarkMode'], (result) => {
-      setIsDarkMode(result.isDarkMode || false);
-    });
+    // 检系统主题
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const setThemeFromSystem = (e: MediaQueryListEvent | MediaQueryList) => {
+      const systemDarkMode = e.matches;
+      chrome.storage.local.get(['isDarkMode'], (result) => {
+        // 如果没有存储的主题设置，使用系统主题
+        if (typeof result.isDarkMode === 'undefined') {
+          setIsDarkMode(systemDarkMode);
+          chrome.storage.local.set({ isDarkMode: systemDarkMode });
+        }
+      });
+    };
 
+    // 初始检查
+    setThemeFromSystem(mediaQuery);
+
+    // 监听系统主题变化
+    const handleThemeChange = (e: MediaQueryListEvent) => {
+      setThemeFromSystem(e);
+    };
+
+    mediaQuery.addEventListener('change', handleThemeChange);
+
+    // 监听存储变化
     const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
       if (changes.isDarkMode) {
         setIsDarkMode(changes.isDarkMode.newValue);
@@ -36,6 +60,7 @@ function App() {
     chrome.storage.local.onChanged.addListener(handleStorageChange);
 
     return () => {
+      mediaQuery.removeEventListener('change', handleThemeChange);
       chrome.storage.local.onChanged.removeListener(handleStorageChange);
     };
   }, []);
@@ -78,7 +103,7 @@ function App() {
         setItems(itemsArray);
       }
     } catch (error) {
-      messageApi.error('获取 localStorage 失败');
+      messageApi.error(t('getLSError'));
       console.error('获取 localStorage 失败:', error);
     } finally {
       setLoading(false);
@@ -105,9 +130,9 @@ function App() {
       setItems(prev => prev.map(i => 
         i.key === item.key ? item : i
       ));
-      messageApi.success('保存成功');
+      messageApi.success(t('saveSuccess'));
     } catch (error) {
-      messageApi.error('保存失败');
+      messageApi.error(t('saveFailed'));
       console.error('编辑 localStorage 失败:', error);
     }
   };
@@ -126,9 +151,9 @@ function App() {
       });
 
       setItems(prev => prev.filter(item => item.key !== key));
-      messageApi.success('删除成功');
+      messageApi.success(t('deleteSuccess'));
     } catch (error) {
-      messageApi.error('删除失败');
+      messageApi.error(t('deleteFailed'));
       console.error('删除 localStorage 失败:', error);
     }
   };
@@ -169,7 +194,8 @@ function App() {
       const params = new URLSearchParams({
         key: record.key,
         value: record.value,
-        tabId: tab.id?.toString() || ''
+        tabId: tab.id?.toString() || '',
+        isDarkMode: isDarkMode.toString()
       });
       chrome.windows.create({
         url: chrome.runtime.getURL(`detail.html?${params.toString()}`),
@@ -183,7 +209,8 @@ function App() {
       const params = new URLSearchParams({
         key: record.key,
         value: record.value,
-        tabId: tab.id?.toString() || ''
+        tabId: tab.id?.toString() || '',
+        isDarkMode: isDarkMode.toString()
       });
       chrome.windows.create({
         url: chrome.runtime.getURL(`detail.html?${params.toString()}`),
@@ -230,7 +257,7 @@ function App() {
       }
     },
     {
-      title: '操作',
+      title: t('operation'),
       key: 'action',
       width: '20%',
       render: (_, record) => (
@@ -247,7 +274,7 @@ function App() {
             className={isDarkMode ? 'text-gray-300 hover:text-blue-300' : ''}
             onClick={() => {
               navigator.clipboard.writeText(record.value);
-              messageApi.success('已复制到剪贴板');
+              messageApi.success(t('copied'));
             }}
           />
           <Button
@@ -271,7 +298,7 @@ function App() {
 
     const setupCode = `var ls = ${JSON.stringify(lsData, null, 2)};\nObject.keys(ls).forEach(k => localStorage[k] = ls[k]);`;
     navigator.clipboard.writeText(setupCode);
-    messageApi.success('已复制设置代码到剪贴板');
+    messageApi.success(t('copied'));
   };
 
   return (
@@ -284,32 +311,60 @@ function App() {
       >
         <div className="flex items-center gap-4">
           <Title level={4} className={`m-0 ${isDarkMode ? 'text-gray-100 !important' : ''}`}>
-            LocalStorage 管理器
+            {t('title')}
           </Title>
-          <Tooltip 
-            title="复制一段代码，可以在控制台执行以批量设置当前所有 localStorage 数据"
-            placement="bottom"
-          >
-            <Button
-              onClick={copySetupCode}
-              icon={<CopyOutlined />}
-              className={`hover:border-blue-400 hover:text-blue-400 transition-colors ${
-                isDarkMode ? 'border-gray-600 text-gray-300 hover:text-blue-300 hover:border-blue-300' : ''
-              }`}
-            >
-              复制设置代码
-            </Button>
-          </Tooltip>
         </div>
         <Space>
-          <Switch
-            checkedChildren={<MoonOutlined />}
-            unCheckedChildren={<SunOutlined />}
-            checked={isDarkMode}
-            onChange={setIsDarkMode}
-            className={isDarkMode ? '!bg-blue-500' : ''}
-          />
-          <Tooltip title="刷新 localStorage 数据">
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: 'copy',
+                  label: t('copySetupCode'),
+                  icon: <CopyOutlined />,
+                  onClick: copySetupCode
+                },
+                {
+                  type: 'divider'
+                },
+                {
+                  key: 'theme',
+                  label: isDarkMode ? t('lightMode') : t('darkMode'),
+                  icon: isDarkMode ? <SunOutlined /> : <MoonOutlined />,
+                  onClick: () => setIsDarkMode(!isDarkMode)
+                },
+                {
+                  type: 'divider'
+                },
+                {
+                  key: 'language',
+                  label: t('language'),
+                  children: [
+                    {
+                      key: 'zh_CN',
+                      label: '中文',
+                      onClick: () => setLocale('zh_CN')
+                    },
+                    {
+                      key: 'en_US',
+                      label: 'English',
+                      onClick: () => setLocale('en_US')
+                    }
+                  ]
+                }
+              ]
+            }}
+            trigger={['hover']}
+            placement="bottomRight"
+          >
+            <Button
+              className={`hover:border-blue-400 hover:text-blue-400 transition-colors ${
+                isDarkMode ? 'bg-gray-800 border-gray-600 text-gray-300 hover:text-blue-300 hover:border-blue-300' : ''
+              }`}
+              icon={<MoreOutlined />}
+            />
+          </Dropdown>
+          <Tooltip title={t('refreshTip')}>
             <Button
               type="primary"
               icon={<ReloadOutlined />}
@@ -317,7 +372,7 @@ function App() {
               loading={loading}
               className={isDarkMode ? 'bg-blue-500 hover:bg-blue-400' : ''}
             >
-              刷新
+              {t('refresh')}
             </Button>
           </Tooltip>
         </Space>
@@ -343,23 +398,28 @@ function App() {
 
       <Drawer
         title={
-          <div className="flex items-center gap-2">
-            <span>编辑 {selectedItem?.key}</span>
-            {isModalJson && (
-              <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
-                JSON
-              </span>
-            )}
-            {selectedItem?.extraInfo && (
-              <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
-                时间戳: {selectedItem.extraInfo}
-              </span>
-            )}
-            {!isModalJson && !selectedItem?.extraInfo && isNumber(selectedItem?.value || '') && (
-              <span className="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full">
-                数字
-              </span>
-            )}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-medium">{t('editLS')}:</span>
+              <span className="break-all">{selectedItem?.key}</span>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              {isModalJson && (
+                <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
+                  {t('json')}
+                </span>
+              )}
+              {selectedItem?.extraInfo && (
+                <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full whitespace-nowrap">
+                  {t('timestamp')}: {selectedItem.extraInfo}
+                </span>
+              )}
+              {!isModalJson && !selectedItem?.extraInfo && isNumber(selectedItem?.value || '') && (
+                <span className="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full">
+                  {t('number')}
+                </span>
+              )}
+            </div>
           </div>
         }
         open={!!selectedItem}
@@ -367,6 +427,16 @@ function App() {
         width="80%"
         placement="right"
         className={isDarkMode ? 'dark' : ''}
+        styles={{
+          header: {
+            paddingTop: 16,
+            paddingBottom: 16,
+          },
+          body: {
+            padding: '20px',
+            paddingBottom: 80
+          }
+        }}
         extra={
           <Space>
             {selectedItem?.extraInfo && (
@@ -384,7 +454,7 @@ function App() {
                   }
                 }}
               >
-                更新为当前时间
+                {t('updateToNow')}
               </Button>
             )}
             <Button 
@@ -396,23 +466,20 @@ function App() {
                 }
               }}
             >
-              保存
+              {t('save')}
             </Button>
           </Space>
         }
-        styles={{
-          body: {
-            padding: '20px',
-            paddingBottom: 80
-          }
-        }}
       >
         <div style={{ height: 'calc(100vh - 200px)' }}>
           <CodeMirror
             value={selectedItem?.value || ''}
             height="100%"
             theme="light"
-            extensions={isModalJson ? [json()] : []}
+            extensions={[
+              ...(isModalJson ? [json()] : []),
+              EditorView.lineWrapping,
+            ]}
             onChange={(value) => {
               if (selectedItem) {
                 const newItem = { ...selectedItem, value };
@@ -426,6 +493,11 @@ function App() {
             }}
             style={{
               fontSize: 14,
+            }}
+            basicSetup={{
+              lineNumbers: true,
+              foldGutter: true,
+              highlightActiveLine: true
             }}
           />
         </div>
