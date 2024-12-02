@@ -4,6 +4,9 @@ A powerful Chrome extension for managing and manipulating website LocalStorage d
 
 [中文文档](README_ZH.md)
 
+[Directions for use(使用说明)](USAGE.md)
+
+
 ## Features
 
 - 🔍 Real-time viewing and editing of LocalStorage data

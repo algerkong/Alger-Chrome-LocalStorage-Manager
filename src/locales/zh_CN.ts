@@ -1,5 +1,5 @@
 export default {
-  title: 'LocalStorage 管理器',
+  title: 'Alger LocalStorage 管理器',
   copySetupCode: '复制设置代码',
   copySetupCodeTip: '复制一段代码，可以在控制台执行以批量设置当前所有 localStorage 数据',
   refresh: '刷新',

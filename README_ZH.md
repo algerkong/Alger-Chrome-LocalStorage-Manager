@@ -1,5 +1,6 @@
 # AlgerChrome-LocalstorageManager
 
+[Directions for use(使用说明)](USAGE.md)
 一个功能强大的 Chrome 扩展，用于管理和操作网站的 LocalStorage 数据。
 
 ## 功能特点

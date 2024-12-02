@@ -1,5 +1,5 @@
 export default {
-  title: 'LocalStorage Manager',
+  title: 'Alger LocalStorage Manager',
   copySetupCode: 'Copy Setup Code',
   copySetupCodeTip: 'Copy code that can be executed in console to batch set all current localStorage data',
   refresh: 'Refresh',
