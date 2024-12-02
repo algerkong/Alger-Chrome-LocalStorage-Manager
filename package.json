@@ -1,5 +1,6 @@
 {
-  "name": "alger-localstorage-manager",
+  "name": "alger-chrome-localstorage-manager",
+  "description": "A powerful Chrome extension for managing localStorage data",
   "private": true,
   "version": "0.0.0",
   "type": "module",
