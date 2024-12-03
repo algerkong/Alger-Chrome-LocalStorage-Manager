@@ -24,4 +24,12 @@ export default {
   operation: '操作',
   lightMode: '浅色模式',
   darkMode: '深色模式',
+  type: '类型',
+  deleteConfirm: '确认删除?',
+  actions: '操作',
+  key: '键',
+  value: '值',
+  searchPlaceholder: '搜索 Key 或 Value',
+  confirm: '确认',
+  cancel: '取消'
 }; 

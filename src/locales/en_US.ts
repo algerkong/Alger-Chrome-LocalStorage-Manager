@@ -23,5 +23,13 @@ export default {
   language: 'Language',
   operation: 'Operation',
   lightMode: 'Light Mode',
-  darkMode: 'Dark Mode'
+  darkMode: 'Dark Mode',
+  type: 'Type',
+  deleteConfirm: 'Confirm delete?',
+  actions: 'Actions',
+  key: 'Key',
+  value: 'Value',
+  searchPlaceholder: 'Search Key or Value',
+  confirm: 'Confirm',
+  cancel: 'Cancel'
 }; 

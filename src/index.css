@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background-color: #f9fafb;
+}
+
+.dark body {
+  background-color: #111827;
+}
+
 /* 暗色主题样式 */
 .dark .ant-table {
   background-color: transparent;
@@ -165,25 +173,6 @@
   background-color: #6b7280;
 }
 
-/* 表格样式 */
-.content-table .ant-table-cell {
-  vertical-align: top;
-  padding: 8px 16px !important;
-}
-
-.content-table .ant-table-thead > tr > th {
-  background: #fafafa;
-  font-weight: 600;
-}
-
-.content-table .ant-table-tbody > tr > td {
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.content-table .ant-table-tbody > tr:hover > td {
-  background: #fafafa;
-}
-
 /* 动画效果 */
 .ant-table-tbody > tr > td,
 .ant-drawer,
@@ -242,4 +231,142 @@
 .dark .ant-drawer-title,
 .dark .ant-drawer-close {
   color: #e5e7eb;
+}
+
+/* 多行文本截断 */
+.value-cell {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  min-height: 3em;
+  height: fit-content;
+  max-height: 3em;
+}
+
+/* 暗色主题下的样式 */
+.dark .value-cell {
+  color: #e5e7eb;
+}
+
+/* 自定义表格样式 */
+.custom-table {
+  background-color: white;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.custom-table.dark {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.value-cell {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  min-height: 3em;
+  height: fit-content;
+  max-height: 3em;
+}
+
+/* 暗色主题下的搜索框样式 */
+.dark .ant-input-affix-wrapper {
+  background-color: #1f2937;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.dark .ant-input-affix-wrapper:hover {
+  border-color: #60a5fa;
+}
+
+.dark .ant-input-affix-wrapper-focused {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+.dark .ant-input {
+  background-color: transparent;
+  color: #e5e7eb;
+}
+
+.dark .ant-input-prefix {
+  color: #9ca3af;
+}
+
+.dark .ant-input-clear-icon {
+  color: #9ca3af;
+}
+
+.dark .ant-input-clear-icon:hover {
+  color: #e5e7eb;
+}
+
+/* 暗色模式下的搜索框样式 */
+.dark-search-input.ant-input-affix-wrapper {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.dark-search-input.ant-input-affix-wrapper:hover,
+.dark-search-input.ant-input-affix-wrapper:focus {
+  border-color: #4b5563;
+}
+
+.dark-search-input.ant-input-affix-wrapper input {
+  background-color: #1f2937;
+  color: #e5e7eb;
+}
+
+.dark-search-input .ant-input-clear-icon {
+  color: #9ca3af;
+}
+
+.dark-search-input .ant-input-clear-icon:hover {
+  color: #d1d5db;
+}
+
+/* 添加这个样式来控制 placeholder 颜色 */
+.dark-search-input.ant-input-affix-wrapper input::placeholder {
+  color: #9ca3af !important;
+}
+
+/* 暗色主题下的下拉菜单样式 */
+.dark .ant-dropdown .ant-dropdown-menu {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+}
+
+.dark .ant-dropdown .ant-dropdown-menu-item,
+.dark .ant-dropdown .ant-dropdown-menu-submenu-title {
+  color: #e5e7eb;
+}
+
+.dark .ant-dropdown .ant-dropdown-menu-item:hover,
+.dark .ant-dropdown .ant-dropdown-menu-submenu-title:hover {
+  background-color: #374151;
+}
+
+.dark .ant-dropdown .ant-dropdown-menu-item-divider {
+  background-color: #374151;
+}
+
+/* 子菜单样式 */
+.dark .ant-dropdown .ant-dropdown-menu-submenu > .ant-dropdown-menu {
+  background-color: #1f2937;
+}
+
+/* 下拉菜单图标颜色 */
+.dark .ant-dropdown .anticon {
+  color: #9ca3af;
+}
+
+.dark .ant-dropdown .ant-dropdown-menu-item:hover .anticon {
+  color: #60a5fa;
 }
