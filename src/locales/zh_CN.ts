@@ -31,5 +31,14 @@ export default {
   value: '值',
   searchPlaceholder: '搜索 Key 或 Value',
   confirm: '确认',
-  cancel: '取消'
+  cancel: '取消',
+  add: '新增',
+  addLS: '新增 localStorage',
+  keyRequired: '请输入键名',
+  keyTooLong: '键名最多 100 个字符',
+  valueRequired: '请输入值',
+  keyPlaceholder: '请输入键名',
+  valuePlaceholder: '请输入值',
+  addSuccess: '添加成功',
+  addFailed: '添加失败'
 }; 

@@ -370,3 +370,80 @@ body {
 .dark .ant-dropdown .ant-dropdown-menu-item:hover .anticon {
   color: #60a5fa;
 }
+
+/* 暗色主题下的 Modal 样式 */
+.dark .ant-modal-content {
+  background-color: #1f2937;
+}
+
+.dark .ant-modal-header {
+  background-color: #1f2937;
+  border-bottom-color: #374151;
+}
+
+.dark .ant-modal-title {
+  color: #e5e7eb;
+}
+
+.dark .ant-modal-close {
+  color: #9ca3af;
+}
+
+.dark .ant-modal-close:hover {
+  color: #e5e7eb;
+}
+
+.dark .ant-form-item-label > label {
+  color: #e5e7eb;
+}
+
+.dark-input.ant-input,
+.dark-input.ant-input-textarea textarea {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.dark-input.ant-input:hover,
+.dark-input.ant-input-textarea textarea:hover {
+  border-color: #60a5fa;
+}
+
+.dark-input.ant-input:focus,
+.dark-input.ant-input-textarea textarea:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+.dark-input.ant-input::placeholder,
+.dark-input.ant-input-textarea textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* CodeMirror 在 Modal 中的样式 */
+.dark .cm-editor {
+  background-color: #374151 !important;
+  color: #e5e7eb !important;
+}
+
+.dark .cm-gutters {
+  background-color: #1f2937 !important;
+  border-right: 1px solid #4b5563 !important;
+}
+
+.dark .cm-activeLineGutter {
+  background-color: #374151 !important;
+}
+
+.dark .cm-activeLine {
+  background-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+/* Modal 中表单项标签的样式 */
+.dark .ant-form-item-required {
+  color: #e5e7eb !important;
+}
+
+.dark .ant-form-item-explain-error {
+  color: #ef4444 !important;
+}

@@ -107,16 +107,19 @@ export const CustomTable: React.FC<TableProps> = ({
 
 const TypeBadge: React.FC<{ type: string }> = ({ type }) => {
   const colorMap = {
-    JSON: 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300',
+    Json: 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300',
     Timestamp: 'bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-300',
     Number: 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/50 dark:text-yellow-300',
     Boolean: 'bg-purple-100 text-purple-600 dark:bg-purple-900/50 dark:text-purple-300',
     String: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
   };
 
+  const normalizedType = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+  const badgeClass = colorMap[normalizedType as keyof typeof colorMap] || colorMap.String;
+
   return (
-    <span className={`px-2 py-1 rounded-full text-xs ${colorMap[type as keyof typeof colorMap]}`}>
-      {type}
+    <span className={`px-2 py-1 rounded-full text-xs ${badgeClass}`}>
+      {normalizedType}
     </span>
   );
 }; 

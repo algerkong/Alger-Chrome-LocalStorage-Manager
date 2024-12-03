@@ -6,6 +6,7 @@ import { json } from '@codemirror/lang-json';
 import { useLocale } from './contexts/LocaleContext';
 import { EditorView } from '@codemirror/view';
 import { CustomTable } from './components/CustomTable';
+import { AddLocalStorage } from './components/AddLocalStorage';
 
 const { Header, Content } = Layout;
 
@@ -226,23 +227,25 @@ function App() {
     }
   };
 
-  // 添加一个工具函数来判断数据类型
+  // 修改 getValueType 函数
   const getValueType = (value: string): string => {
     try {
       // 检查布尔值
       if (value === 'true' || value === 'false') {
         return 'Boolean';
       }
+      // 检查时间戳
+      if (isTimestamp(value)) {
+        return 'Timestamp';
+      }
+      // 检查数字
+      if (isNumber(value)) {
+        return 'Number';
+      }
       // 尝试解析 JSON
       JSON.parse(value);
       return 'JSON';
     } catch {
-      if (isTimestamp(value)) {
-        return 'Timestamp';
-      }
-      if (isNumber(value)) {
-        return 'Number';
-      }
       return 'String';
     }
   };
@@ -263,6 +266,20 @@ function App() {
     item.key.toLowerCase().includes(searchText.toLowerCase()) ||
     item.value.toLowerCase().includes(searchText.toLowerCase())
   );
+
+  // 添加处理函数
+  const handleAdd = async (key: string, value: string) => {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab.id) return;
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: (key: string, value: string) => {
+        localStorage.setItem(key, value);
+      },
+      args: [key, value]
+    });
+    setItems(prev => [...prev, { key, value }]);
+  };
 
   return (
     <Layout className={`min-w-[784px] transition-colors duration-300 ${isDarkMode ? 'bg-gray-900 dark' : 'bg-gray-50'}`}>
@@ -285,6 +302,21 @@ function App() {
               </div>
             </div>
             <Space>
+              <AddLocalStorage 
+                isDarkMode={isDarkMode} 
+                onAdd={handleAdd}
+              />
+              <Tooltip title={t('refreshTip')}>
+                <Button
+                  type="primary"
+                  icon={<ReloadOutlined />}
+                  onClick={fetchLocalStorage}
+                  loading={loading}
+                  className={isDarkMode ? 'bg-blue-500 hover:bg-blue-400' : ''}
+                >
+                  {t('refresh')}
+                </Button>
+              </Tooltip>
               <Dropdown
                 menu={{
                   items: [
@@ -343,17 +375,6 @@ function App() {
                   icon={<MoreOutlined />}
                 />
               </Dropdown>
-              <Tooltip title={t('refreshTip')}>
-                <Button
-                  type="primary"
-                  icon={<ReloadOutlined />}
-                  onClick={fetchLocalStorage}
-                  loading={loading}
-                  className={isDarkMode ? 'bg-blue-500 hover:bg-blue-400' : ''}
-                >
-                  {t('refresh')}
-                </Button>
-              </Tooltip>
             </Space>
           </Header>
           

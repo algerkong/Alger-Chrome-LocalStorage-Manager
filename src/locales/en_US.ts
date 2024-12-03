@@ -31,5 +31,14 @@ export default {
   value: 'Value',
   searchPlaceholder: 'Search Key or Value',
   confirm: 'Confirm',
-  cancel: 'Cancel'
+  cancel: 'Cancel',
+  add: 'Add',
+  addLS: 'Add LocalStorage',
+  keyRequired: 'Please enter the key name',
+  keyTooLong: 'The key name is up to 100 characters',
+  valueRequired: 'Please enter the value',
+  keyPlaceholder: 'Please enter the key name',
+  valuePlaceholder: 'Please enter the value',
+  addSuccess: 'Add successful',
+  addFailed: 'Add failed'
 }; 
