@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StorageItem } from '../../types';
 import { TypeBadge } from './TypeBadge';
 import { formatTimestamp } from '../../utils/typeDetection';
@@ -10,11 +10,48 @@ interface StorageRowProps {
   onClick: () => void;
   onCopy: () => void;
   onDelete: () => void;
+  onInlineSave: (key: string, value: string) => void;
 }
 
 export const StorageRow: React.FC<StorageRowProps> = ({
-  item, selected, onToggleSelect, onClick, onCopy, onDelete
+  item, selected, onToggleSelect, onClick, onCopy, onDelete, onInlineSave
 }) => {
+  const [inlineEditing, setInlineEditing] = useState(false);
+  const [inlineValue, setInlineValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inlineEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [inlineEditing]);
+
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (item.value.length >= 100 || item.type === 'JSON') {
+      onClick();
+      return;
+    }
+    setInlineValue(item.value);
+    setInlineEditing(true);
+  };
+
+  const handleInlineSave = () => {
+    if (inlineValue !== item.value) {
+      onInlineSave(item.key, inlineValue);
+    }
+    setInlineEditing(false);
+  };
+
+  const handleInlineKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleInlineSave();
+    } else if (e.key === 'Escape') {
+      setInlineEditing(false);
+    }
+  };
+
   return (
     <div
       className={`group grid grid-cols-[40px_minmax(0,1.2fr)_80px_minmax(0,2fr)_60px_100px] gap-3 items-center
@@ -49,15 +86,33 @@ export const StorageRow: React.FC<StorageRowProps> = ({
       </div>
 
       {/* Value */}
-      <div className="text-sm text-gray-600 dark:text-gray-400 truncate font-mono" title={item.value}>
-        {item.type === 'Timestamp' ? (
-          <span className="flex items-center gap-1.5">
-            <span className="truncate">{item.value}</span>
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 whitespace-nowrap shrink-0">
-              {formatTimestamp(item.value)}
-            </span>
-          </span>
-        ) : item.value}
+      <div onDoubleClick={handleDoubleClick}>
+        {inlineEditing ? (
+          <input
+            ref={inputRef}
+            value={inlineValue}
+            onChange={e => setInlineValue(e.target.value)}
+            onBlur={handleInlineSave}
+            onKeyDown={handleInlineKeyDown}
+            className="w-full text-sm font-mono px-2 py-0.5 rounded border
+              border-blue-400 dark:border-blue-500
+              bg-white dark:bg-gray-800
+              text-gray-900 dark:text-gray-100
+              focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+            onClick={e => e.stopPropagation()}
+          />
+        ) : (
+          <div className="text-sm text-gray-600 dark:text-gray-400 truncate font-mono" title={item.value}>
+            {item.type === 'Timestamp' ? (
+              <span className="flex items-center gap-1.5">
+                <span className="truncate">{item.value}</span>
+                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 whitespace-nowrap shrink-0">
+                  {formatTimestamp(item.value)}
+                </span>
+              </span>
+            ) : item.value}
+          </div>
+        )}
       </div>
 
       {/* Size */}
