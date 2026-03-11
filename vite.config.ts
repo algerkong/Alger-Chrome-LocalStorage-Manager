@@ -13,6 +13,7 @@ export default defineConfig({
         main: path.resolve(__dirname, 'index.html'),
         detail: path.resolve(__dirname, 'detail.html'),
         contentScript: path.resolve(__dirname, 'src/contentScript.ts'),
+        background: path.resolve(__dirname, 'src/background.ts'),
       },
       output: {
         entryFileNames: '[name].js',
