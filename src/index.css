@@ -1,94 +1,17 @@
-@import 'antd/dist/reset.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  background-color: #f9fafb;
+  @apply bg-gray-50 dark:bg-gray-950 antialiased;
+  margin: 0;
+  padding: 0;
 }
 
-.dark body {
-  background-color: #111827;
-}
-
-/* 暗色主题样式 */
-.dark .ant-table {
-  background-color: transparent;
-  color: #e5e7eb !important;
-}
-
-.dark .ant-table-thead > tr > th {
-  background-color: #374151 !important;
-  color: #e5e7eb !important;
-  border-bottom: 1px solid #4b5563 !important;
-}
-
-.dark .ant-table-tbody > tr > td {
-  background-color: transparent !important;
-  color: #e5e7eb !important;
-  border-bottom: 1px solid #4b5563 !important;
-}
-
-.dark .ant-table-tbody > tr:hover > td {
-  background-color: rgba(55, 65, 81, 0.5) !important;
-}
-
-.dark .ant-drawer-content {
-  background-color: #1f2937;
-  color: #e5e7eb;
-}
-
-.dark .ant-drawer-header {
-  background-color: #1f2937;
-  border-bottom: 1px solid #4b5563;
-}
-
-.dark .ant-drawer-title {
-  color: #e5e7eb;
-}
-
-.dark .ant-drawer-close {
-  color: #e5e7eb;
-}
-
-.dark .cm-editor {
-  background-color: #374151 !important;
-  color: #e5e7eb !important;
-}
-
-.dark .cm-gutters {
-  background-color: #1f2937 !important;
-  border-right: 1px solid #4b5563 !important;
-}
-
-/* 滚动条样式 */
-.no-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.no-scrollbar::-webkit-scrollbar-horizontal {
-  display: none;
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.no-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #d9d9d9;
-  border-radius: 3px;
-}
-
-.no-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #bfbfbf;
-}
-
-/* 全局滚动条样式 */
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -96,354 +19,83 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: content-box;
+  @apply bg-gray-300 dark:bg-gray-700;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #9ca3af;
+  @apply bg-gray-400 dark:bg-gray-600;
 }
 
-/* 暗色主题下的滚动条 */
-.dark ::-webkit-scrollbar-thumb {
-  background-color: #4b5563;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background-color: #6b7280;
-}
-
-/* CodeMirror 滚动条样式 */
-.cm-scroller::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.cm-scroller::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.cm-scroller::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.cm-scroller::-webkit-scrollbar-thumb:hover {
-  background-color: #9ca3af;
-}
-
-.dark .cm-scroller::-webkit-scrollbar-thumb {
-  background-color: #4b5563;
-}
-
-.dark .cm-scroller::-webkit-scrollbar-thumb:hover {
-  background-color: #6b7280;
-}
-
-/* 表格滚动条样式 */
-.ant-table-body::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.ant-table-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.ant-table-body::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.ant-table-body::-webkit-scrollbar-thumb:hover {
-  background-color: #9ca3af;
-}
-
-.dark .ant-table-body::-webkit-scrollbar-thumb {
-  background-color: #4b5563;
-}
-
-.dark .ant-table-body::-webkit-scrollbar-thumb:hover {
-  background-color: #6b7280;
-}
-
-/* 动画效果 */
-.ant-table-tbody > tr > td,
-.ant-drawer,
-.ant-btn,
-.ant-switch {
-  transition: all 0.3s ease;
-}
-
-/* 按钮悬浮效果 */
-.ant-btn:not(.ant-btn-primary):hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* 暗色主题下的标题颜色 */
-.dark .ant-typography {
-  color: #e5e7eb !important;
-}
-
-/* 暗色主题下的按钮样式 */
-.dark .ant-btn {
-  border-color: #4b5563;
-  color: #e5e7eb;
-  background-color: #1f2937;
-}
-
-.dark .ant-btn:hover {
-  border-color: #60a5fa;
-  color: #60a5fa;
-  background-color: #374151;
-}
-
-.dark .ant-btn-primary {
-  background-color: #3b82f6;
-  border-color: #3b82f6;
-  color: #ffffff;
-}
-
-.dark .ant-btn-primary:hover {
-  background-color: #60a5fa;
-  border-color: #60a5fa;
-}
-
-/* 暗色主题下的开关样式 */
-.dark .ant-switch.ant-switch-checked {
-  background-color: #3b82f6 !important;
-}
-
-/* 暗色主题下的 Drawer 样式优化 */
-.dark .ant-drawer-content,
-.dark .ant-drawer-header {
-  background-color: #1f2937;
-  border-color: #4b5563;
-}
-
-.dark .ant-drawer-title,
-.dark .ant-drawer-close {
-  color: #e5e7eb;
-}
-
-/* 多行文本截断 */
-.value-cell {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.5;
-  min-height: 3em;
-  height: fit-content;
-  max-height: 3em;
-}
-
-/* 暗色主题下的样式 */
-.dark .value-cell {
-  color: #e5e7eb;
-}
-
-/* 自定义表格样式 */
-.custom-table {
-  background-color: white;
-  border: 1px solid #f0f0f0;
-  transition: all 0.3s ease;
-}
-
-.custom-table.dark {
-  background-color: #1f2937;
-  border-color: #374151;
-}
-
-.value-cell {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.5;
-  min-height: 3em;
-  height: fit-content;
-  max-height: 3em;
-}
-
-/* 暗色主题下的搜索框样式 */
-.dark .ant-input-affix-wrapper {
-  background-color: #1f2937;
-  border-color: #4b5563;
-  color: #e5e7eb;
-}
-
-.dark .ant-input-affix-wrapper:hover {
-  border-color: #60a5fa;
-}
-
-.dark .ant-input-affix-wrapper-focused {
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
-}
-
-.dark .ant-input {
-  background-color: transparent;
-  color: #e5e7eb;
-}
-
-.dark .ant-input-prefix {
-  color: #9ca3af;
-}
-
-.dark .ant-input-clear-icon {
-  color: #9ca3af;
-}
-
-.dark .ant-input-clear-icon:hover {
-  color: #e5e7eb;
-}
-
-/* 暗色模式下的搜索框样式 */
-.dark-search-input.ant-input-affix-wrapper {
-  background-color: #1f2937;
-  border-color: #374151;
-}
-
-.dark-search-input.ant-input-affix-wrapper:hover,
-.dark-search-input.ant-input-affix-wrapper:focus {
-  border-color: #4b5563;
-}
-
-.dark-search-input.ant-input-affix-wrapper input {
-  background-color: #1f2937;
-  color: #e5e7eb;
-}
-
-.dark-search-input .ant-input-clear-icon {
-  color: #9ca3af;
-}
-
-.dark-search-input .ant-input-clear-icon:hover {
-  color: #d1d5db;
-}
-
-/* 添加这个样式来控制 placeholder 颜色 */
-.dark-search-input.ant-input-affix-wrapper input::placeholder {
-  color: #9ca3af !important;
-}
-
-/* 暗色主题下的下拉菜单样式 */
-.dark .ant-dropdown .ant-dropdown-menu {
-  background-color: #1f2937;
-  border: 1px solid #374151;
-}
-
-.dark .ant-dropdown .ant-dropdown-menu-item,
-.dark .ant-dropdown .ant-dropdown-menu-submenu-title {
-  color: #e5e7eb;
-}
-
-.dark .ant-dropdown .ant-dropdown-menu-item:hover,
-.dark .ant-dropdown .ant-dropdown-menu-submenu-title:hover {
-  background-color: #374151;
-}
-
-.dark .ant-dropdown .ant-dropdown-menu-item-divider {
-  background-color: #374151;
-}
-
-/* 子菜单样式 */
-.dark .ant-dropdown .ant-dropdown-menu-submenu > .ant-dropdown-menu {
-  background-color: #1f2937;
-}
-
-/* 下拉菜单图标颜色 */
-.dark .ant-dropdown .anticon {
-  color: #9ca3af;
-}
-
-.dark .ant-dropdown .ant-dropdown-menu-item:hover .anticon {
-  color: #60a5fa;
-}
-
-/* 暗色主题下的 Modal 样式 */
-.dark .ant-modal-content {
-  background-color: #1f2937;
-}
-
-.dark .ant-modal-header {
-  background-color: #1f2937;
-  border-bottom-color: #374151;
-}
-
-.dark .ant-modal-title {
-  color: #e5e7eb;
-}
-
-.dark .ant-modal-close {
-  color: #9ca3af;
-}
-
-.dark .ant-modal-close:hover {
-  color: #e5e7eb;
-}
-
-.dark .ant-form-item-label > label {
-  color: #e5e7eb;
-}
-
-.dark-input.ant-input,
-.dark-input.ant-input-textarea textarea {
-  background-color: #374151;
-  border-color: #4b5563;
-  color: #e5e7eb;
-}
-
-.dark-input.ant-input:hover,
-.dark-input.ant-input-textarea textarea:hover {
-  border-color: #60a5fa;
-}
-
-.dark-input.ant-input:focus,
-.dark-input.ant-input-textarea textarea:focus {
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
-}
-
-.dark-input.ant-input::placeholder,
-.dark-input.ant-input-textarea textarea::placeholder {
-  color: #9ca3af;
-}
-
-/* CodeMirror 在 Modal 中的样式 */
+/* CodeMirror dark mode */
 .dark .cm-editor {
-  background-color: #374151 !important;
-  color: #e5e7eb !important;
+  background-color: #111827 !important;
 }
 
 .dark .cm-gutters {
-  background-color: #1f2937 !important;
-  border-right: 1px solid #4b5563 !important;
+  background-color: #0f172a !important;
+  border-right-color: #1e293b !important;
 }
 
 .dark .cm-activeLineGutter {
-  background-color: #374151 !important;
+  background-color: #1e293b !important;
 }
 
 .dark .cm-activeLine {
-  background-color: rgba(55, 65, 81, 0.5) !important;
+  background-color: rgba(255, 255, 255, 0.03) !important;
 }
 
-/* Modal 中表单项标签的样式 */
-.dark .ant-form-item-required {
-  color: #e5e7eb !important;
+.dark .cm-cursor {
+  border-left-color: #e5e7eb !important;
 }
 
-.dark .ant-form-item-explain-error {
-  color: #ef4444 !important;
+.dark .cm-selectionBackground {
+  background-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+/* CodeMirror scrollbar */
+.cm-scroller::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.cm-scroller::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-700;
+  border-radius: 3px;
+}
+
+/* Animations */
+@keyframes slide-in {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.25s ease-out;
+}
+
+.animate-modal-in {
+  animation: modal-in 0.2s ease-out;
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+  @apply accent-blue-500;
 }
