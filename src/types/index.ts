@@ -10,6 +10,8 @@ export type StorageValueType = 'JSON' | 'String' | 'Number' | 'Boolean' | 'Times
 
 export type StorageType = 'localStorage' | 'sessionStorage';
 
+export type DataSourceType = 'localStorage' | 'sessionStorage' | 'cookie' | 'indexedDB';
+
 export type SortField = 'key' | 'type' | 'size' | null;
 export type SortOrder = 'asc' | 'desc';
 
@@ -22,12 +24,37 @@ export interface UndoAction {
   oldItems?: Array<{ key: string; value: string }>;
 }
 
+export interface CookieItem {
+  name: string;
+  value: string;
+  domain: string;
+  path: string;
+  expires: number | null;
+  httpOnly: boolean;
+  secure: boolean;
+  sameSite: 'strict' | 'lax' | 'none' | 'unspecified';
+  size: number;
+}
+
+export interface Snapshot {
+  id: string;
+  name: string;
+  url: string;
+  storageType: 'localStorage' | 'sessionStorage';
+  data: Record<string, string>;
+  createdAt: number;
+  itemCount: number;
+  totalSize: number;
+}
+
 export interface AppState {
   items: StorageItem[];
   selectedKeys: Set<string>;
   editingItem: StorageItem | null;
   storageType: StorageType;
+  dataSource: DataSourceType;
   searchText: string;
+  searchRegex: boolean;
   sortField: SortField;
   sortOrder: SortOrder;
   loading: boolean;
@@ -39,6 +66,8 @@ export interface AppState {
 export type AppAction =
   | { type: 'SET_ITEMS'; payload: StorageItem[] }
   | { type: 'SET_STORAGE_TYPE'; payload: StorageType }
+  | { type: 'SET_DATA_SOURCE'; payload: DataSourceType }
+  | { type: 'SET_SEARCH_REGEX'; payload: boolean }
   | { type: 'TOGGLE_SELECT'; payload: string }
   | { type: 'SELECT_ALL'; payload: string[] }
   | { type: 'DESELECT_ALL' }

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { AppState, AppAction } from '../types';
+import { AppState, AppAction, DataSourceType } from '../types';
 
 const MAX_UNDO = 50;
 
@@ -8,7 +8,9 @@ const initialState: AppState = {
   selectedKeys: new Set<string>(),
   editingItem: null,
   storageType: 'localStorage',
+  dataSource: 'localStorage' as DataSourceType,
   searchText: '',
+  searchRegex: false,
   sortField: null,
   sortOrder: 'asc',
   loading: false,
@@ -25,12 +27,29 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return {
         ...state,
         storageType: action.payload,
+        dataSource: action.payload,
         selectedKeys: new Set(),
         editingItem: null,
         sidePanelOpen: false,
         undoStack: [],
         redoStack: [],
       };
+    case 'SET_DATA_SOURCE': {
+      const ds = action.payload;
+      const storageType = (ds === 'localStorage' || ds === 'sessionStorage') ? ds : state.storageType;
+      return {
+        ...state,
+        dataSource: ds,
+        storageType,
+        selectedKeys: new Set(),
+        editingItem: null,
+        sidePanelOpen: false,
+        undoStack: [],
+        redoStack: [],
+      };
+    }
+    case 'SET_SEARCH_REGEX':
+      return { ...state, searchRegex: action.payload };
     case 'TOGGLE_SELECT': {
       const next = new Set(state.selectedKeys);
       if (next.has(action.payload)) next.delete(action.payload);

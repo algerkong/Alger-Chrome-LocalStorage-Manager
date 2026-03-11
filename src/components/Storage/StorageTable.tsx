@@ -8,6 +8,7 @@ interface StorageTableProps {
   items: StorageItem[];
   selectedKeys: Set<string>;
   searchText: string;
+  searchRegex: boolean;
   sortField: SortField;
   sortOrder: SortOrder;
   onToggleSelect: (key: string) => void;
@@ -17,19 +18,32 @@ interface StorageTableProps {
   onCopy: (value: string) => void;
   onDelete: (key: string) => void;
   onSort: (field: SortField) => void;
+  onInlineSave: (key: string, value: string) => void;
 }
 
 export const StorageTable: React.FC<StorageTableProps> = ({
-  items, selectedKeys, searchText, sortField, sortOrder,
-  onToggleSelect, onSelectAll, onDeselectAll, onClickItem, onCopy, onDelete, onSort
+  items, selectedKeys, searchText, searchRegex, sortField, sortOrder,
+  onToggleSelect, onSelectAll, onDeselectAll, onClickItem, onCopy, onDelete, onSort, onInlineSave
 }) => {
   const { t } = useLocale();
 
   const filteredAndSorted = useMemo(() => {
-    const lower = searchText.toLowerCase();
-    let result = items.filter(i =>
-      i.key.toLowerCase().includes(lower) || i.value.toLowerCase().includes(lower)
-    );
+    let result = items;
+    if (searchText) {
+      if (searchRegex) {
+        try {
+          const re = new RegExp(searchText, 'i');
+          result = items.filter(i => re.test(i.key) || re.test(i.value));
+        } catch {
+          result = items;
+        }
+      } else {
+        const lower = searchText.toLowerCase();
+        result = items.filter(i =>
+          i.key.toLowerCase().includes(lower) || i.value.toLowerCase().includes(lower)
+        );
+      }
+    }
     if (sortField) {
       result = [...result].sort((a, b) => {
         let cmp = 0;
@@ -40,7 +54,7 @@ export const StorageTable: React.FC<StorageTableProps> = ({
       });
     }
     return result;
-  }, [items, searchText, sortField, sortOrder]);
+  }, [items, searchText, searchRegex, sortField, sortOrder]);
 
   const allSelected = filteredAndSorted.length > 0 && filteredAndSorted.every(i => selectedKeys.has(i.key));
 
@@ -106,6 +120,7 @@ export const StorageTable: React.FC<StorageTableProps> = ({
               onClick={() => onClickItem(item)}
               onCopy={() => onCopy(item.value)}
               onDelete={() => onDelete(item.key)}
+              onInlineSave={onInlineSave}
             />
           ))
         )}
