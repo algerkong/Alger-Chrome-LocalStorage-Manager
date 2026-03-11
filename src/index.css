@@ -2,10 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  @apply bg-gray-200 dark:bg-gray-950;
+}
+
 body {
-  @apply bg-gray-50 dark:bg-gray-950 antialiased;
-  margin: 0;
-  padding: 0;
+  @apply bg-gray-50 dark:bg-gray-900 antialiased rounded-xl m-1.5 overflow-hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.dark body {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 /* Scrollbar */
