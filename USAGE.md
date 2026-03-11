@@ -1,75 +1,96 @@
-# 使用说明 / Usage Guide
+# Usage Guide / 使用说明
 
-## 中文说明
+## Basic Operations / 基本操作
 
-### 基本操作
-1. 查看数据
-   - 打开扩展后自动显示当前网站的所有 LocalStorage 数据
-   - 点击刷新按钮可以更新数据
+### View Data / 查看数据
+- Open the extension popup to see all storage data for the current site
+- Toggle between **Local** and **Session** storage using the header switch
+- Data auto-refreshes when external changes are detected (3s interval)
 
-2. 编辑数据
-   - 点击数据行可以编辑内容
-   - 短文本和数字直接在弹窗中编辑
-   - JSON 数据和长文本会在新窗口中编辑
+打开扩展弹出窗口即可查看当前站点的所有存储数据。通过顶部切换按钮在 Local 和 Session 存储之间切换。检测到外部变更时数据会自动刷新（3 秒间隔）。
 
-3. 特殊类型处理
-   - JSON 数据自动格式化
-   - 时间戳自动转换为可读格式
-   - 支持一键更新时间戳为当前时间
+### Edit Data / 编辑数据
+- Click any row to open the **side panel editor**
+- Edit values with syntax highlighting (JSON auto-detected)
+- Click "Open in new window" for large values in a full-screen editor
+- Click **Save** or press Escape to cancel
 
-4. 批量操作
-   - 点击"复制设置代码"可以导出所有数据
-   - 复制的代码可以在控制台执行以批量设置数据
+点击任意行打开**侧边编辑面板**。编辑器支持语法高亮（自动检测 JSON）。大型数据可点击"在新窗口打开"进行全屏编辑。
 
-### 个性化设置
-- 主题切换：点击设置按钮切换明暗主题
-- 语言切换：支持中文和英文界面
-- 自动适配：跟随系统主题和语言设置
+### Add Data / 新增数据
+- Click the **+** button in the toolbar
+- Enter key name and value in the dialog
+- The value editor supports JSON syntax highlighting
 
-## English Guide
+点击工具栏 **+** 按钮，在弹窗中输入键名和值。值编辑器支持 JSON 语法高亮。
 
-### Basic Operations
-1. View Data
-   - Automatically displays all LocalStorage data of current website
-   - Click refresh button to update data
+### Delete Data / 删除数据
+- Hover over a row and click the delete icon
+- Confirm deletion in the dialog
+- Use **Ctrl+Z** to undo if needed
 
-2. Edit Data
-   - Click on data row to edit content
-   - Short text and numbers can be edited in popup
-   - JSON data and long text will be edited in new window
+悬停在行上点击删除图标，在确认对话框中确认。如需撤销可按 **Ctrl+Z**。
 
-3. Special Type Handling
-   - JSON data auto formatting
-   - Timestamp auto conversion to readable format
-   - One-click timestamp update to current time
+## Batch Operations / 批量操作
 
-4. Batch Operations
-   - Click "Copy Setup Code" to export all data
-   - Execute copied code in console to batch set data
+- Use checkboxes to select multiple items (or "Select All" in the header)
+- A batch action bar appears with **Delete Selected** and **Deselect All** options
+- Batch deletions can be undone with Ctrl+Z
 
-### Personalization
-- Theme Switch: Click settings button to toggle light/dark theme
-- Language Switch: Supports Chinese and English interface
-- Auto Adaptation: Follows system theme and language settings
+使用复选框选择多个项目（或使用表头的全选）。批量操作栏会显示**批量删除**和**取消全选**选项。批量删除可通过 Ctrl+Z 撤销。
 
-## 快捷键 / Shortcuts
+## Import & Export / 导入导出
 
-| 操作 / Action | 快捷键 / Shortcut |
+### Export / 导出
+- Click the download icon in the toolbar
+- All data exports as a `.json` file
+
+点击工具栏下载图标，所有数据导出为 `.json` 文件。
+
+### Import / 导入
+- Click the upload icon in the toolbar
+- Select a `.json` file
+- Choose **Merge** (add to existing) or **Replace** (clear and import)
+
+点击工具栏上传图标，选择 `.json` 文件，然后选择**合并**（添加到现有数据）或**替换**（清空后导入）。
+
+## Special Features / 特殊功能
+
+### Smart Type Detection / 智能类型检测
+| Type | Detection Rule |
+|------|---------------|
+| JSON | Valid JSON object or array |
+| Timestamp | 10 or 13 digit number in range 2001–2100 |
+| Boolean | Exactly `true` or `false` |
+| Number | Valid numeric string |
+| String | Everything else |
+
+### Undo / Redo / 撤销重做
+- **Ctrl+Z** — Undo last action (add, edit, delete, batch delete)
+- **Ctrl+Shift+Z** — Redo
+- Up to 50 steps of history
+- Switching storage type clears the undo history
+
+### Storage Capacity / 存储容量
+- Progress bar shows current usage vs 5MB limit
+- Color changes: blue (normal) → amber (80%+) → red (95%+)
+
+### Copy Setup Code / 复制设置代码
+- Click "**...**" menu → "Copy Setup Code"
+- Paste in browser console to replicate all storage data on another site
+
+## Keyboard Shortcuts / 快捷键
+
+| Action / 操作 | Shortcut / 快捷键 |
 |--------------|------------------|
-| 刷新 / Refresh | Ctrl/Cmd + R |
-| 保存 / Save | Ctrl/Cmd + S |
-| 复制 / Copy | Ctrl/Cmd + C |
+| Undo / 撤销 | Ctrl/Cmd + Z |
+| Redo / 重做 | Ctrl/Cmd + Shift + Z |
+| Close Panel / 关闭面板 | Escape |
 
-## 提示 / Tips
+## Personalization / 个性化
 
-1. 编辑 JSON 数据时会自动验证格式
-   JSON format is automatically validated when editing
+- **Theme** — Click sun/moon icon to toggle dark/light mode (or follows system)
+- **Language** — Click EN/中 button to switch between English and Chinese
+- Preferences are saved and synced across popup and detail windows
 
-2. 时间戳支持 10 位和 13 位格式
-   Timestamp supports both 10-digit and 13-digit formats
-
-3. 可以直接复制单个值或导出所有数据
-   You can copy single value or export all data
-
-4. 界面会自动保存您的主题和语言偏好
-   Interface automatically saves your theme and language preferences 
+**主题** — 点击日/月图标切换深色/浅色模式（或跟随系统）。**语言** — 点击 EN/中 按钮切换中英文。偏好设置在弹出窗口和详情窗口之间同步保存。
